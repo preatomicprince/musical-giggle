@@ -7,15 +7,18 @@
 #include <SDL2/SDL.h>
 
 #include "settings.h"
+#include "input.h"
 
-#define TILE_W 128
-#define TILE_H 64
+#define TILE_W 222
+#define TILE_H 128
 #define HALF_TILE_W TILE_W/2
 #define HALF_TILE_H TILE_H/2
 
+#define ISOMETRIC_RATIO TILE_W/TILE_H 
+
 // Number of tiles in map's x and y
-#define MAP_W 32
-#define MAP_H 32
+#define MAP_W 4
+#define MAP_H 4
 
 typedef struct  tile_s{
     
@@ -35,7 +38,9 @@ typedef tile_t map_t[MAP_W][MAP_H];
 
 void set_bg(map_t map, SDL_Texture* texture);
 
-#define CAMERA_SPEED 10
+#define CAMERA_SPEED 0.5
+#define CAMERA_SPEED_X CAMERA_SPEED*ISOMETRIC_RATIO
+#define CAMERA_SPEED_Y CAMERA_SPEED
 
 // Contains data of what is displayed on screen
 struct camera_s{
@@ -43,14 +48,22 @@ struct camera_s{
   float x, y;
 };
 
+void update_camera(struct camera_s *camera, struct input_s input);
+
 // Get screen position from map to where it appears on screen
-#define MAP_X_TO_SCREEN(map_x, map_y, camera_x) ((map_x - map_y)*HALF_TILE_W - HALF_TILE_W + camera_x)
-#define MAP_Y_TO_SCREEN(map_x, map_y, camera_y) ((map_x + map_y)*HALF_TILE_H + camera_y)
+#define MAP_TO_SCREEN_X(map_x, map_y, camera_x) ((map_x - map_y)*HALF_TILE_W + camera_x)
+#define MAP_TO_SCREEN_Y(map_x, map_y, camera_y) ((map_x + map_y)*HALF_TILE_H + camera_y)
 
 // Return true if on screen
 #define X_ON_SCREEN(screen_x, camera_x) ((screen_x > 0 + camera.x - TILE_W) && (screen_x < SCREEN_W + camera.x + TILE_W))
 #define Y_ON_SCREEN(screen_y, camera_y) ((screen_y > 0 + camera.y - TILE_H) && (screen_y < SCREEN_H + camera.y + TILE_H))
 #define TILE_ON_SCREEN(screen_x, screen_y, camera_x, camera_y) (X_ON_SCREEN && Y_ON_SCREEN)
+
+#define SCREEN_TO_MAP_X(screen_x, screen_y, camera_x, camera_y) ((2*(screen_x-camera_x)/HALF_TILE_W) + (2*(screen_y - camera_y)/HALF_TILE_H))
+#define SCREEN_TO_MAP_Y(screen_x, screen_y, camera_x, camera_y) ((2*(screen_y - camera_y)/HALF_TILE_H) - (2*(screen_x - camera_x)/HALF_TILE_W))
+
+//Don't have to commit to this exact func. Basically just need one for generic points
+//fvec2_t get_mouse_map_pos(map_t map, struct input_s input);
 
 /* 
 // Return pointer to list of entities

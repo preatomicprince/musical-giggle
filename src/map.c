@@ -16,13 +16,28 @@ void set_bg(map_t map, SDL_Texture* texture){
   }
 }
 
+void update_camera(struct camera_s *camera, struct input_s input){
+  if (input.key_right){
+    camera->x -= CAMERA_SPEED_X;
+  }
+  if (input.key_left){
+    camera->x += CAMERA_SPEED_X;
+  }
+  if (input.key_up){
+    camera->y += CAMERA_SPEED_Y;
+  }
+  if (input.key_down){
+    camera->y -= CAMERA_SPEED_Y;
+  }
+}
+
 void draw_tile(SDL_Renderer* renderer, tile_t tile, struct camera_s camera){
   float tile_screen_x;
   float tile_screen_y;
   SDL_Rect rect;
 
-  tile_screen_x = MAP_X_TO_SCREEN(tile.x, tile.y, camera.x);
-  tile_screen_y = MAP_Y_TO_SCREEN(tile.x, tile.y, camera.y);
+  tile_screen_x = MAP_TO_SCREEN_X(tile.x, tile.y, camera.x);
+  tile_screen_y = MAP_TO_SCREEN_Y(tile.x, tile.y, camera.y);
 
   rect = (SDL_Rect){tile_screen_x, tile_screen_y, TILE_W, TILE_H};
 

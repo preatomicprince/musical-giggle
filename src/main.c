@@ -4,17 +4,20 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "input.h"
 #include "map.h"
 #include "settings.h"
+
 
 int main() {
   SDL_Renderer* renderer = NULL;
   SDL_Window* window = NULL;
-  bool RUNNING = true;
 
   map_t map;
   struct camera_s camera;
-  camera.x = SCREEN_W/2;
+
+  struct input_s input;
+  memset(&input, 0, sizeof(input));
 
   SDL_Init(SDL_INIT_VIDEO);
   SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, 0, &window, &renderer);
@@ -27,43 +30,17 @@ int main() {
 
   set_bg(map, new_texture);
 
-  while (RUNNING){
+  while (!input.QUIT){
     SDL_RenderClear(renderer); //Clear screen      
 
     while(SDL_PollEvent(&event)){
       if (event.type == SDL_QUIT){
-          RUNNING = false;
           SDL_Quit();
       }
-
-      if (event.type == SDL_KEYDOWN){
-        switch (event.key.keysym.sym){
-        case SDLK_LEFT:
-          camera.x += 1*CAMERA_SPEED;
-          break;
-
-        case SDLK_RIGHT:
-          camera.x -= 1*CAMERA_SPEED;
-          break;
-
-        case SDLK_UP:
-          camera.y += 1*CAMERA_SPEED;
-          break;
-
-        case SDLK_DOWN:
-          camera.y -= 1*CAMERA_SPEED;
-          break;
-
-        case SDLK_ESCAPE:
-          RUNNING = false;
-          SDL_Quit();
-          break;
-
-        default:
-          break;
-        }
-      }
+      handle_input(event, &input);
     }
+
+    update_camera(&camera, input);
 
     draw_map(renderer, map, camera);
 
