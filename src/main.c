@@ -15,6 +15,7 @@ int main() {
 
   map_t map;
   struct camera_s camera;
+  memset(&camera, 0, sizeof(camera));
 
   struct input_s input;
   memset(&input, 0, sizeof(input));
@@ -28,14 +29,15 @@ int main() {
   SDL_Surface* new_surface = SDL_LoadBMP(filepath);
   SDL_Texture* new_texture = SDL_CreateTextureFromSurface(renderer, new_surface);
 
-  set_bg(map, new_texture);
+  set_map_tile_texture(map, new_texture);
 
   while (!input.QUIT){
     SDL_RenderClear(renderer); //Clear screen      
 
     while(SDL_PollEvent(&event)){
       if (event.type == SDL_QUIT){
-          SDL_Quit();
+        input.QUIT = true;
+        SDL_Quit();
       }
       handle_input(event, &input);
     }

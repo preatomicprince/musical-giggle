@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "settings.h": "c",
-        "sdl.h": "c"
+        "sdl.h": "c",
+        "sprite.h": "c"
     }
 }
