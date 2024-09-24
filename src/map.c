@@ -66,17 +66,22 @@ fvec2_t screen_pos_to_map_pos(float screen_x, float screen_y, struct camera_s ca
 void draw_tile(SDL_Renderer* renderer, tile_t tile, struct camera_s camera){
   float tile_screen_x;
   float tile_screen_y;
-  // add check for if onscreen
-  //bool on_screen = TILE_ON_SCREEN(tile_screen_x, tile_screen_y, camera_x, camera_y);
-  SDL_Rect rect;
+  bool on_screen;
 
   tile_screen_x = MAP_TO_SCREEN_X(tile.x, tile.y, camera.x);
   tile_screen_y = MAP_TO_SCREEN_Y(tile.x, tile.y, camera.y);
 
-  
-    rect = (SDL_Rect){tile_screen_x, tile_screen_y, TILE_W, TILE_H};
+  // add check for if onscreen
+  on_screen = TILE_ON_SCREEN(tile_screen_x, tile_screen_y, camera.x, camera.y);
 
-    SDL_RenderCopy(renderer, tile.texture, NULL, &rect);
+  if (!on_screen){
+    return;
+  }
+  SDL_Rect rect;
+  
+  rect = (SDL_Rect){tile_screen_x, tile_screen_y, TILE_W, TILE_H};
+
+  SDL_RenderCopy(renderer, tile.texture, NULL, &rect);
 }
 
 void draw_map(SDL_Renderer* renderer,map_t map, struct camera_s camera){

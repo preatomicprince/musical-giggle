@@ -17,8 +17,8 @@
 #define ISOMETRIC_RATIO TILE_W/TILE_H 
 
 // Number of tiles in map's x and y
-#define MAP_W 4
-#define MAP_H 4
+#define MAP_W 16
+#define MAP_H 16
 
 typedef struct  tile_s{
     
@@ -64,9 +64,9 @@ void update_camera(struct camera_s *camera, struct input_s input);
 #define MAP_TO_SCREEN_Y(map_x, map_y, camera_y) ((map_x + map_y)*HALF_TILE_H + camera_y)
 
 // Return true if on screen
-#define X_ON_SCREEN(screen_x, camera_x) ((screen_x > 0 + camera.x - TILE_W) && (screen_x < SCREEN_W + camera.x + TILE_W))
-#define Y_ON_SCREEN(screen_y, camera_y) ((screen_y > 0 + camera.y - TILE_H) && (screen_y < SCREEN_H + camera.y + TILE_H))
-#define TILE_ON_SCREEN(screen_x, screen_y, camera_x, camera_y) (X_ON_SCREEN(screen_x, camera_x) && Y_ON_SCREEN(screen_x, camera_x))
+#define X_ON_SCREEN(screen_x, camera_x) ((screen_x > 0 - TILE_W) && (screen_x < SCREEN_W + TILE_W))
+#define Y_ON_SCREEN(screen_y, camera_y) ((screen_y > 0 - TILE_H) && (screen_y < SCREEN_H + TILE_H))
+#define TILE_ON_SCREEN(screen_x, screen_y, camera_x, camera_y) (X_ON_SCREEN(screen_x, camera_x) && Y_ON_SCREEN(screen_y, camera_y))
 
 #define SCREEN_TO_MAP_X(screen_x, screen_y, camera_x, camera_y) ((2*(screen_x-camera_x)/HALF_TILE_W) + (2*(screen_y - camera_y)/HALF_TILE_H))
 #define SCREEN_TO_MAP_Y(screen_x, screen_y, camera_x, camera_y) ((2*(screen_y - camera_y)/HALF_TILE_H) - (2*(screen_x - camera_x)/HALF_TILE_W))
