@@ -26,11 +26,11 @@ int main() {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
   SDL_Event event;
 
-  const char* filepath = "../res/tile1.bmp";
+  // Loads array containing pointers to all tile textures
+  // See sprite.c/.h
+  load_sprites(renderer, tile_sprites, tile_sprite_filepaths, TILE_SPRITE_COUNT);
 
-  spritesheet_t* new_sprite = make_sprite(renderer, filepath);
-
-  set_map_tile_spritesheet(map, new_sprite);
+  set_map_tile_spritesheet(map, tile_sprites[dirt]);
 
   while (!input.QUIT){
     SDL_RenderClear(renderer); //Clear screen      
@@ -49,5 +49,5 @@ int main() {
     draw_mouse_over_tile(renderer, map, camera, input);
 
     SDL_RenderPresent(renderer); //Render to window
-  }    
+  }
 }

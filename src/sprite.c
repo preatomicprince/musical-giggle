@@ -1,4 +1,19 @@
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
 #include "sprite.h"
+
+/*
+// All tile sprites files stored here
+// Enum in header. Must also be updated when file added 
+// Created with load_sprites func
+*/
+
+spritesheet_t *tile_sprites[TILE_SPRITE_COUNT];
+const char *tile_sprite_filepaths[TILE_SPRITE_COUNT] = {
+    "../res/tile1.bmp",
+    "../res/tile2.bmp"
+};
 
 SDL_Texture* make_texture(SDL_Renderer* renderer, const char* filepath){
     SDL_Surface* new_surface = SDL_LoadBMP(filepath);
@@ -62,3 +77,13 @@ int render(SDL_Renderer* renderer, spritesheet_t* spritesheet, float x, float y)
 
     return 1;
 }
+
+
+void load_sprites(SDL_Renderer *renderer, spritesheet_t **sprite_list, const char **filepath_list, int sprite_count){
+    int i;
+
+    for (i = 0; i < sprite_count; i++){
+        sprite_list[i] = make_sprite(renderer, filepath_list[i]);
+    }
+}
+
