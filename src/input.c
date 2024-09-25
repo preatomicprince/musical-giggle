@@ -6,6 +6,10 @@
 #include "input.h"
 
 void handle_input(SDL_Event event, struct input_s* input){
+  if (event.type == SDL_QUIT){
+        input->QUIT = true;
+        SDL_Quit();
+      }
   if (event.type == SDL_KEYDOWN){
       switch(event.key.keysym.sym){
           case SDLK_LEFT:

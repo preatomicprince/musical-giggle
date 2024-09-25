@@ -36,10 +36,6 @@ int main() {
     SDL_RenderClear(renderer); //Clear screen      
 
     while(SDL_PollEvent(&event)){
-      if (event.type == SDL_QUIT){
-        input.QUIT = true;
-        SDL_Quit();
-      }
       handle_input(event, &input);
     }
 
