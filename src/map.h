@@ -6,9 +6,9 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 
-#include "settings.h"
 #include "input.h"
-
+#include "settings.h"
+#include "sprite.h"
 
 #define TILE_W 222
 #define TILE_H 128
@@ -29,7 +29,7 @@ typedef struct  tile_s{
   int x;
   int y;
 
-  SDL_Texture *texture;
+  spritesheet_t* spritesheet;
 
   // List of pointers to entities on tile
   // to-do: Add entities
@@ -39,11 +39,11 @@ typedef struct  tile_s{
 // Array holding all tiles that make up map
 typedef tile_t map_t[MAP_W][MAP_H];
 
-void set_tile_texture(tile_t *tile, SDL_Texture *texture);
+void set_tile_spritesheet(tile_t *tile, spritesheet_t *spritesheet);
 
 void set_tile_position(tile_t *tile, int x, int y);
 
-void set_map_tile_texture(map_t map, SDL_Texture* texture);
+void set_map_tile_spritesheet(map_t map, spritesheet_t *spritesheet);
 
 #define CAMERA_SPEED 0.5
 #define CAMERA_SPEED_X CAMERA_SPEED*ISOMETRIC_RATIO

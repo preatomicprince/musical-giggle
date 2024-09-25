@@ -9,19 +9,22 @@
 
 SDL_Texture* make_texture(SDL_Renderer* renderer, const char* filepath);
 
-typedef struct spritesheet_{
+typedef struct spritesheet_s{
     SDL_Texture* texture;
     int frame_count;
     int current_frame;
 
-    SDL_Point size;
-}spritesheet;
+    int w;
+    int h;
+}spritesheet_t;
 
-spritesheet* make_spritesheet(SDL_Renderer* renderer, const char* filepath, int framecount);
+spritesheet_t* make_spritesheet(SDL_Renderer* renderer, const char* filepath, int framecount);
 
-spritesheet* make_sprite(SDL_Renderer* renderer, const char* filepath);
+spritesheet_t* make_sprite(SDL_Renderer* renderer, const char* filepath);
 
-int render(SDL_Renderer* renderer, spritesheet* spritesheet, SDL_Point pos);
+void free_spritesheet(spritesheet_t* spritesheet);
+
+int render(SDL_Renderer* renderer, spritesheet_t* spritesheet, float x, float y);
 
 #endif
 

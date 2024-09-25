@@ -6,6 +6,7 @@
 
 #include "input.h"
 #include "map.h"
+#include "sprite.h"
 #include "settings.h"
 
 
@@ -26,10 +27,10 @@ int main() {
   SDL_Event event;
 
   const char* filepath = "../res/tile1.bmp";
-  SDL_Surface* new_surface = SDL_LoadBMP(filepath);
-  SDL_Texture* new_texture = SDL_CreateTextureFromSurface(renderer, new_surface);
 
-  set_map_tile_texture(map, new_texture);
+  spritesheet_t* new_sprite = make_sprite(renderer, filepath);
+
+  set_map_tile_spritesheet(map, new_sprite);
 
   while (!input.QUIT){
     SDL_RenderClear(renderer); //Clear screen      

@@ -5,9 +5,10 @@
 
 #include "map.h"
 #include "settings.h"
+#include "sprite.h"
 
-void set_tile_texture(tile_t *tile, SDL_Texture *texture){
-  tile->texture = texture;
+void set_tile_spritesheet(tile_t *tile, spritesheet_t *spritesheet){
+  tile->spritesheet = spritesheet;
 }
 
 void set_tile_position(tile_t *tile, int x, int y){
@@ -15,13 +16,13 @@ void set_tile_position(tile_t *tile, int x, int y){
   tile->y = y;
 }
 
-void set_map_tile_texture(map_t map, SDL_Texture* texture){
+void set_map_tile_spritesheet(map_t map, spritesheet_t *spritesheet){
   int x, y;
 
   for (x = 0; x < MAP_W; x++){
     for (y = 0; y < MAP_H; y++){
       set_tile_position(&map[x][y], x, y);
-      set_tile_texture(&map[x][y], texture);
+      set_tile_spritesheet(&map[x][y], spritesheet);
     }
   }
 }
@@ -125,11 +126,7 @@ void draw_tile(SDL_Renderer* renderer, tile_t tile, struct camera_s camera){
     return;
   }
 
-  SDL_Rect rect;
-  
-  rect = (SDL_Rect){tile_screen_x, tile_screen_y, TILE_W, TILE_H};
-
-  SDL_RenderCopy(renderer, tile.texture, NULL, &rect);
+  render(renderer, tile.spritesheet, tile_screen_x, tile_screen_y);
 }
 
 void draw_map(SDL_Renderer* renderer,map_t map, struct camera_s camera){

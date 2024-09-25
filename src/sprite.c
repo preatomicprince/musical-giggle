@@ -7,37 +7,46 @@ SDL_Texture* make_texture(SDL_Renderer* renderer, const char* filepath){
     return new_texture;
 }
 
-spritesheet* make_spritesheet(SDL_Renderer* renderer, const char* filepath, int framecount){
-    SDL_Surface* new_surface = SDL_LoadBMP(filepath);
+spritesheet_t* make_spritesheet(SDL_Renderer* renderer, const char* filepath, int framecount){
+    SDL_Surface* new_surface;
+    SDL_Texture* new_texture;
+    int new_w;
+    int new_h;
+    spritesheet_t* new_spritesheet;
+    
+    new_surface = SDL_LoadBMP(filepath);
 
     if (new_surface == NULL){
         printf("FAILED TO LOAD BMP! \n");
     }
 
-    SDL_Texture* new_texture = SDL_CreateTextureFromSurface(renderer, new_surface);
-    SDL_Point new_size = {new_surface->w, new_surface->h};
-    spritesheet new_spritesheet = {new_texture, framecount, 0, new_size};
+    new_texture = SDL_CreateTextureFromSurface(renderer, new_surface);
+    new_w = new_surface->w;
+    new_h = new_surface->h;
 
-    spritesheet* spritesheet_ptr = calloc(1, sizeof(spritesheet));
+    new_spritesheet = calloc(1, sizeof(spritesheet_t));
 
-    spritesheet_ptr[0] = new_spritesheet;
+    *new_spritesheet = (spritesheet_t){new_texture, framecount, 0, new_w, new_h};
 
     SDL_FreeSurface(new_surface);
-    return spritesheet_ptr;
+    return new_spritesheet;
 }
 
-spritesheet* make_sprite(SDL_Renderer* renderer, const char* filepath){
-  make_spritesheet(renderer, filepath, 1);
+void free_spritesheet(spritesheet_t* spritesheet){
+    free(spritesheet);
 }
 
-int render(SDL_Renderer* renderer, spritesheet* spritesheet, SDL_Point pos){
-    SDL_Rect sheet_rect = {pos.x, pos.y, spritesheet->size.x, spritesheet->size.y};
-    
+spritesheet_t* make_sprite(SDL_Renderer* renderer, const char* filepath){
+  return make_spritesheet(renderer, filepath, 1);
+}
+
+int render(SDL_Renderer* renderer, spritesheet_t* spritesheet, float x, float y){
+    SDL_Rect sheet_rect = {x, y, spritesheet->w, spritesheet->h};
     
     if (spritesheet->frame_count == 0){
         SDL_RenderCopy(renderer, spritesheet->texture, NULL, &sheet_rect);
     } else {
-        int frame_w = spritesheet->size.x/spritesheet->frame_count;
+        int frame_w = spritesheet->w/spritesheet->frame_count;
 
         sheet_rect.w = frame_w;
 
