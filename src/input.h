@@ -17,7 +17,8 @@ struct input_s {
 
     int mouse_l_click;
     int mouse_r_click;
-    SDL_Point mouse_pos;
+    int mouse_x;
+    int mouse_y;
 
     bool QUIT;
 };

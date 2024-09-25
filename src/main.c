@@ -45,6 +45,7 @@ int main() {
     update_camera(&camera, input);
 
     draw_map(renderer, map, camera);
+    draw_mouse_over_tile(renderer, map, camera, input);
 
     SDL_RenderPresent(renderer); //Render to window
   }    

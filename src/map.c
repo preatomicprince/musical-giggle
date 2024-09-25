@@ -58,9 +58,56 @@ void update_camera(struct camera_s *camera, struct input_s input){
   adjust_camera_offset(camera, new_x, new_y);
 }
 
-fvec2_t screen_pos_to_map_pos(float screen_x, float screen_y, struct camera_s camera){
-  return (fvec2_t){SCREEN_TO_MAP_X(screen_x, screen_y, camera.x, camera.y), 
-                   SCREEN_TO_MAP_Y(screen_x, screen_y, camera.x, camera.y)};
+fvec2_t map_to_screen_pos(int map_x, int map_y, struct camera_s camera){
+  return (fvec2_t){
+    MAP_TO_SCREEN_X(map_x, map_y, camera.x),
+    MAP_TO_SCREEN_Y(map_x, map_y, camera.y)
+  };
+}
+
+bool tile_on_map(int tile_x, int tile_y){
+  return (tile_x >= 0 && tile_x < MAP_W) && (tile_y >= 0 && tile_y < MAP_H) ;
+}
+
+
+fvec2_t screen_to_map_pos(float screen_x, float screen_y, struct camera_s camera){
+  return (fvec2_t){
+    SCREEN_TO_MAP_X(screen_x, screen_y, camera.x, camera.y), 
+    SCREEN_TO_MAP_Y(screen_x, screen_y, camera.x, camera.y)
+    };
+}
+
+void draw_tile_outline(SDL_Renderer *renderer, map_t map, int tile_index_x, int tile_index_y, struct camera_s camera){
+  fvec2_t  tile_screen_pos;
+  SDL_Point line_points[5];
+
+  // Return if not on map
+  if (!tile_on_map(tile_index_x, tile_index_y)){
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    return;
+  }
+
+  tile_screen_pos = map_to_screen_pos(tile_index_x, tile_index_y, camera);
+
+  line_points[0] = (SDL_Point){tile_screen_pos.x + HALF_TILE_W, tile_screen_pos.y};
+  line_points[1] = (SDL_Point){tile_screen_pos.x + TILE_W,      tile_screen_pos.y + HALF_TILE_H};
+  line_points[2] = (SDL_Point){tile_screen_pos.x + HALF_TILE_W, tile_screen_pos.y + TILE_H};
+  line_points[3] = (SDL_Point){tile_screen_pos.x,               tile_screen_pos.y + HALF_TILE_H};
+  line_points[4] = line_points[0];
+  
+  SDL_RenderDrawLines(renderer, line_points, 5);
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+}
+
+void draw_mouse_over_tile(SDL_Renderer *renderer, map_t map, struct camera_s camera, struct input_s input){
+  fvec2_t mouse_map_pos_f;
+  ivec2_t mouse_map_pos_i;
+
+  mouse_map_pos_f = screen_to_map_pos(input.mouse_x, input.mouse_y, camera);
+  mouse_map_pos_i = fvec2_to_ivec2(mouse_map_pos_f);
+
+  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
+  draw_tile_outline(renderer, map, mouse_map_pos_i.x, mouse_map_pos_i.y, camera);
 }
 
 void draw_tile(SDL_Renderer* renderer, tile_t tile, struct camera_s camera){
@@ -77,6 +124,7 @@ void draw_tile(SDL_Renderer* renderer, tile_t tile, struct camera_s camera){
   if (!on_screen){
     return;
   }
+
   SDL_Rect rect;
   
   rect = (SDL_Rect){tile_screen_x, tile_screen_y, TILE_W, TILE_H};

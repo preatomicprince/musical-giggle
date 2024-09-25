@@ -9,6 +9,7 @@
 #include "settings.h"
 #include "input.h"
 
+
 #define TILE_W 222
 #define TILE_H 128
 #define HALF_TILE_W TILE_W/2
@@ -16,9 +17,11 @@
 
 #define ISOMETRIC_RATIO TILE_W/TILE_H 
 
+
 // Number of tiles in map's x and y
 #define MAP_W 16
 #define MAP_H 16
+
 
 typedef struct  tile_s{
     
@@ -63,22 +66,23 @@ void update_camera(struct camera_s *camera, struct input_s input);
 #define MAP_TO_SCREEN_X(map_x, map_y, camera_x) ((map_x - map_y)*HALF_TILE_W + camera_x)
 #define MAP_TO_SCREEN_Y(map_x, map_y, camera_y) ((map_x + map_y)*HALF_TILE_H + camera_y)
 
+fvec2_t map_to_screen_pos(int map_x, int map_y, struct camera_s camera);
+
 // Return true if on screen
 #define X_ON_SCREEN(screen_x, camera_x) ((screen_x > 0 - TILE_W) && (screen_x < SCREEN_W + TILE_W))
 #define Y_ON_SCREEN(screen_y, camera_y) ((screen_y > 0 - TILE_H) && (screen_y < SCREEN_H + TILE_H))
 #define TILE_ON_SCREEN(screen_x, screen_y, camera_x, camera_y) (X_ON_SCREEN(screen_x, camera_x) && Y_ON_SCREEN(screen_y, camera_y))
 
-#define SCREEN_TO_MAP_X(screen_x, screen_y, camera_x, camera_y) ((2*(screen_x-camera_x)/HALF_TILE_W) + (2*(screen_y - camera_y)/HALF_TILE_H))
-#define SCREEN_TO_MAP_Y(screen_x, screen_y, camera_x, camera_y) ((2*(screen_y - camera_y)/HALF_TILE_H) - (2*(screen_x - camera_x)/HALF_TILE_W))
+bool tile_on_map(int tile_x, int tile_y);
 
-fvec2_t screen_pos_to_map_pos(float screen_x, float screen_y, struct camera_s camera);
-//Don't have to commit to this exact func. Basically just need one for generic points
-//fvec2_t get_mouse_map_pos(map_t map, struct input_s input);
+#define SCREEN_TO_MAP_X(screen_x, screen_y, camera_x, camera_y) ((2*(screen_x-camera_x)/HALF_TILE_W) + (2*(screen_y - camera_y)/HALF_TILE_H) - 0.5)
+#define SCREEN_TO_MAP_Y(screen_x, screen_y, camera_x, camera_y) ((2*(screen_y - camera_y)/HALF_TILE_H) - (2*(screen_x - camera_x)/HALF_TILE_W) + 0.5)
 
-/* 
-// Return pointer to list of entities
-entity** get_entities_on_tile (tile_t* map, int x, int y);
-*/
+fvec2_t screen_to_map_pos(float screen_x, float screen_y, struct camera_s camera);
+
+void draw_tile_outline(SDL_Renderer *renderer, map_t map, int tile_index_x, int tile_index_y, struct camera_s camera);
+
+void draw_mouse_over_tile(SDL_Renderer *renderer, map_t map, struct camera_s camera, struct input_s input);
 
 void draw_tile(SDL_Renderer* renderer, tile_t tile, struct camera_s camera);
 

@@ -47,7 +47,7 @@ void handle_input(SDL_Event event, struct input_s* input){
           break;
       }
   }else if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEMOTION){
-      SDL_GetMouseState( &input->mouse_pos.x, &input->mouse_pos.y);
+      SDL_GetMouseState( &input->mouse_x, &input->mouse_y);
       if (event.type == SDL_MOUSEBUTTONDOWN){
         input->mouse_l_click = 1;
       }else if(event.type == SDL_MOUSEBUTTONUP){
