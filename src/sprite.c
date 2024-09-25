@@ -87,3 +87,11 @@ void load_sprites(SDL_Renderer *renderer, spritesheet_t **sprite_list, const cha
     }
 }
 
+void free_sprites(spritesheet_t **sprite_list, int sprite_count){
+    int i;
+
+    for (i = 0; i < sprite_count; i++){
+        free_spritesheet(sprite_list[i]);
+    }
+}
+

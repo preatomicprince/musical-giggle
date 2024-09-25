@@ -50,4 +50,5 @@ int main() {
 
     SDL_RenderPresent(renderer); //Render to window
   }
+  free_sprites(tile_sprites, TILE_SPRITE_COUNT);
 }

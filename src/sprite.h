@@ -42,4 +42,5 @@ int render(SDL_Renderer* renderer, spritesheet_t* spritesheet, float x, float y)
 
 void load_sprites(SDL_Renderer *renderer, spritesheet_t **sprite_list, const char **filepath_list, int sprite_count);
 
+void free_sprites(spritesheet_t **sprite_list, int sprite_count);
 #endif
